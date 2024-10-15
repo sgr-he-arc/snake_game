@@ -1,0 +1,9 @@
+{
+    "controls": {
+        "move_up": "ArrowUp",
+        "move_down": "ArrowDown",
+        "move_left": "ArrowLeft",
+        "move_right": "ArrowRight",
+        "quit": "q"
+    }
+}
