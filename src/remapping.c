@@ -1,7 +1,8 @@
 # include "SDL.h"
 # include "SDL_ttf.h"
+# include <stdio.h>
 
-void config(void) {
+void config_mapping_view(void) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("Erreur d'initialisation de SDL: %s\n", SDL_GetError());
         exit(1);
@@ -18,14 +19,16 @@ void config(void) {
     if (!window) {
         printf("Erreur de création de la fenêtre: %s\n", SDL_GetError());
         SDL_Quit();  // Quitter proprement si la fenêtre n'est pas créée
-        QuitError();
+        // QuitError();
+        exit(1);
     }
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
         printf("Erreur de création du renderer: %s\n", SDL_GetError());
         SDL_DestroyWindow(window);
         SDL_Quit();
-        QuitError();
+        // QuitError();
+        exit(1);
     }
 
     int quit = 0;
