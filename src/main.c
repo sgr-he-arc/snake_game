@@ -1,4 +1,7 @@
+//Spécifie à SDL que le projet est en console sous main
 # define SDL_MAIN_HANDLED
+
+//Includes systèmes
 # include <stdio.h>
 # include <stdbool.h>
 # include <stdlib.h>
@@ -7,21 +10,28 @@
 # include <windows.h>
 # include <string.h>
 
+//includes de librairies externes
+# include "SDL.h"
+# include "SDL_ttf.h"
 # include "cJSON.h"
+
+//includes persos, liens avec d'autres fichiers
 # include "keys_mapping_json.h"
+# include "remapping.h"
 
-// void QuitProgram(void) {
-//     SDL_Quit();
-//     TTF_Quit();
-//     exit(0);
-// }
+//méthodes pour quitter le programme
+void QuitProgram(void) {
+    SDL_Quit();
+    TTF_Quit();
+    exit(0);
+}
+void QuitError(void) {
+    SDL_Quit();
+    TTF_Quit();
+    exit(1);
+}
 
-// void QuitError(void) {
-//     SDL_Quit();
-//     TTF_Quit();
-//     exit(-1);
-// }
-
+//logique pour les commandes
 typedef struct {
     char *name;
     char *desc;
@@ -39,7 +49,10 @@ void help(void) {
 }
 
 void config(void) {
-
+    if (config_mapping_view()) {
+        printf("An error occured while creating remapping view\n");
+        QuitError();
+    }
 }
 
 Command commands[] = {
@@ -48,14 +61,28 @@ Command commands[] = {
     {NULL, NULL, NULL}
 };
 
+
 int main(void) {
+    //Initialisation des outils graphiques
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        printf("Erreur d'initialisation de SDL: %s\n", SDL_GetError());
+        QuitError();
+    }
+
+    
+    if (TTF_Init() == -1) {
+        printf("Erreur d'initialisation de SDL_ttf: %s\n", TTF_GetError());
+        QuitError();
+    }
+
+    //récupération des touches
     if (read_config_file()) {
         printf("An error occured, please check the config file");
         getch();
-        // QuitError();
-        return 1;
+        QuitError();
     }
 
+    //Projet console
     const int game_board_size = 17;
     bool game_board[game_board_size][game_board_size];
     for (int i = 0; i < game_board_size; i++)
@@ -119,8 +146,7 @@ int main(void) {
             printf("Are you sure you want to quit ? (o/N) : ");
             scanf("%c", &userInputChar);
             if(userInputChar == 'o') {
-                // QuitProgram();
-                return 0;
+                QuitProgram();
             }
         } else if (userInput == '/') {
             system("cls");
