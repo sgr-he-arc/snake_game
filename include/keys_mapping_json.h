@@ -3,18 +3,15 @@
 
 typedef struct
 {
-    char *label;
+    char* label;
     int key;
 } KeyMapping;
 
-extern int upKey;
-extern int downKey;
-extern int leftKey;
-extern int rightKey;
-extern int quitKey;
+extern KeyMapping* game_keys;
+extern int num_commands;
 
 int read_config_file(void);
 
-void free_commands();
+void free_commands(void);
 
 #endif

@@ -1,9 +1,25 @@
 {
-    "controls": {
-        "move_up": "ArrowUp",
-        "move_down": "ArrowDown",
-        "move_left": "ArrowLeft",
-        "move_right": "ArrowRight",
-        "quit": "q"
-    }
+    "controls": [
+        {
+            "label": "Move Up",
+            "key": "ArrowUp"
+        },
+        {
+            "label": "Move Down",
+            "key": "ArrowDown"
+        },
+        {
+            "label": "Move Left",
+            "key": "ArrowLeft"
+        },
+        {
+            "label": "Move Right",
+            "key": "ArrowRight"
+        },
+        {
+            "label": "Quit",
+            "key": "q"
+        }
+
+    ]
 }

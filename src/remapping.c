@@ -1,6 +1,7 @@
 # include "SDL.h"
 # include "SDL_ttf.h"
 # include <stdio.h>
+# include "keys_mapping_json.h"
 
 void config_mapping_view(void) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {

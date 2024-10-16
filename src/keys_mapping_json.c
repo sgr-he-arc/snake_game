@@ -4,11 +4,8 @@
 # include "cJSON.h"
 # include "keys_mapping_json.h"
 
-int upKey = 0;
-int downKey = 0;
-int leftKey = 0;
-int rightKey = 0;
-int quitKey = 0;
+KeyMapping* game_keys = NULL;
+int num_commands = 0;
 
 void clear_datas(char* data, cJSON* json) {
     free(data);
@@ -78,14 +75,24 @@ int read_config_file(void) {
     }
 
     cJSON* controls = cJSON_GetObjectItemCaseSensitive(json, "controls");
-    if (controls) {
-        if (read_key(controls, "move_up", &upKey) ||
-            read_key(controls, "move_down", &downKey) ||
-            read_key(controls, "move_left", &leftKey) ||
-            read_key(controls, "move_right", &rightKey) ||
-            read_key(controls, "quit", &quitKey)) {
-            clear_datas(data, json);
+    if (controls && cJSON_IsArray(controls)) {
+        num_commands = cJSON_GetArraySize(controls);
+        game_keys = (KeyMapping*)malloc(num_commands * sizeof(KeyMapping));
+        if (game_keys == NULL) {
+            printf("Memory alloc. error\n");
             return 1;
+        }
+
+        int index = 0;
+        cJSON* control = NULL;
+        cJSON_ArrayForEach(control, controls) {
+            cJSON* label = cJSON_GetObjectItemCaseSensitive(control, "label");
+            cJSON* key = cJSON_GetObjectItemCaseSensitive(control, "key");
+            if (cJSON_IsString(label) && cJSON_IsString(key) && label->valuestring != NULL && key->valuestring != NULL) {
+                game_keys[index].label = strdup(label->valuestring);
+                game_keys[index].key = map_key(key->valuestring);
+                index++;
+            }
         }
     }
     else {

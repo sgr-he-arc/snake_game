@@ -94,27 +94,27 @@ int main(void) {
         if (userInput == 224) {
             userInput = getch();
         }
-        if (userInput == upKey) {
+        if (userInput == game_keys[0].key) {
             coordY--;
             if (coordY < 0) {
                 coordY += game_board_size;
             }
-        } else if (userInput == downKey) {
+        } else if (userInput == game_keys[1].key) {
             coordY++;
             if (coordY > game_board_size - 1) {
                 coordY -= game_board_size;
             }
-        } else if (userInput == leftKey) {
+        } else if (userInput == game_keys[2].key) {
             coordX--;
             if (coordX < 0) {
                 coordX += game_board_size;
             }
-        } else if (userInput == rightKey) {
+        } else if (userInput == game_keys[3].key) {
             coordX++;
             if (coordX > game_board_size - 1) {
                 coordX -= game_board_size;
             }
-        } else if (userInput == quitKey) {
+        } else if (userInput == game_keys[4].key) {
             char userInputChar = 0x00;
             printf("Are you sure you want to quit ? (o/N) : ");
             scanf("%c", &userInputChar);
