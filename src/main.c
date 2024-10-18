@@ -144,6 +144,7 @@ int main(void) {
         } else if (userInput == game_keys[4].key) {
             char userInputChar = 0x00;
             printf("Are you sure you want to quit ? (o/N) : ");
+            fflush(stdin);
             scanf("%c", &userInputChar);
             if(userInputChar == 'o') {
                 QuitProgram();
@@ -152,6 +153,7 @@ int main(void) {
             system("cls");
             char userCommand[32] = {0};
             printf("/");
+            fflush(stdin);
             scanf("%31s", userCommand);
             bool commandFound = false;
             for (int i = 0; commands[i].name != NULL; i++) {

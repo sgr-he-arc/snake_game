@@ -12,6 +12,8 @@ extern int num_commands;
 
 int read_config_file(void);
 
+void save_config_file(void);
+
 void free_commands(void);
 
 #endif

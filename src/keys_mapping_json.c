@@ -103,3 +103,56 @@ int read_config_file(void) {
     clear_datas(data, json);
     return 0;
 }
+
+void save_config_file(void) {
+    cJSON *json = cJSON_CreateObject();
+    cJSON *controls = cJSON_CreateArray();
+
+    for (int i = 0; i < num_commands; i++) {
+        cJSON *command = cJSON_CreateObject();
+        cJSON_AddStringToObject(command, "label", game_keys[i].label);
+
+        char keyStr[32];
+
+        // Gérer les flèches et autres touches spéciales
+        switch (game_keys[i].key) {
+            case 72:  // Flèche haut
+                strcpy(keyStr, "ArrowUp");
+                break;
+            case 80:  // Flèche bas
+                strcpy(keyStr, "ArrowDown");
+                break;
+            case 75:  // Flèche gauche
+                strcpy(keyStr, "ArrowLeft");
+                break;
+            case 77:  // Flèche droite
+                strcpy(keyStr, "ArrowRight");
+                break;
+            default:
+                // Pour les autres touches, on convertit simplement le caractère
+                snprintf(keyStr, sizeof(keyStr), "%c", game_keys[i].key);
+                break;
+        }
+
+        cJSON_AddStringToObject(command, "key", keyStr);
+        cJSON_AddItemToArray(controls, command);
+    }
+
+    FILE* file = fopen("../assets/config/settings.json", "w");
+    if (file == NULL) {
+        printf("unable to open settings file");
+        cJSON_Delete(json);
+    }
+
+    cJSON_AddItemToObject(json, "controls", controls);
+
+    char *json_string = cJSON_Print(json);
+    if (json_string) {
+        fprintf(file, "%s", json_string);
+        free(json_string);
+    }
+
+    fclose(file);
+
+    cJSON_Delete(json);
+}
