@@ -38,6 +38,9 @@ int coordY = (int)(game_board_size / 2);
 int userInput = 0;
 SnakeSegment snake[(game_board_size - 2)*(game_board_size - 2)];
 int snakeLength = 1;
+int directionX = 1;
+int directionY = 0;
+char snakeHead = '>';
 
 //méthodes pour quitter le programme
 void QuitProgram(void) {
@@ -112,7 +115,7 @@ void render_snake_game(void) {
         for (int j = 0; j < game_board_size; j++)
         {
             if (i == coordY && j == coordX) {
-                printf("*");
+                printf("%c", snakeHead);
             }else if (i == foodY && j == foodX)
             {
                 printf("@");
@@ -153,7 +156,7 @@ void render_normal_game(void) {
         for (int j = 0; j < game_board_size; j++)
         {
             if (i == coordY && j == coordX) {
-                printf("*");
+                printf("%c", snakeHead);
             } else  if (game_board[i][j]) {
                 printf("#");
             }
@@ -188,6 +191,27 @@ void game_over(void) {
     }
 }
 
+void checkCollisions(void) {
+    coordX += directionX;
+    coordY += directionY;
+    if (coordX == foodX && coordY == foodY) {
+        snakeLength++;
+        generate_food();
+    }
+
+    for (int i = 0; i < snakeLength - 1; i++)
+    {
+        if (coordX == snake[i].x && coordY == snake[i].y) {
+            game_over();
+        }
+    }
+
+    update_snake();
+    
+    if (coordY <= 0 || coordY >= game_board_size - 1 || coordX <= 0 || coordX >= game_board_size - 1) {
+        game_over();
+    }
+}
 
 int main(void) {
     srand(time(NULL));
@@ -230,77 +254,96 @@ int main(void) {
 
         printf("Mode actuel : %s\n", snake_mod ? "Snake" : "Normal");
         snake_mod ? render_snake_game() : render_normal_game();
-        userInput = getch();
-        if (userInput == 224) {
+        if (_kbhit() || !snake_mod) {
             userInput = getch();
-        }
-        if (userInput == game_keys[0].key) {
-            coordY--;
-        } else if (userInput == game_keys[1].key) {
-            coordY++;
-        } else if (userInput == game_keys[2].key) {
-            coordX--;
-        } else if (userInput == game_keys[3].key) {
-            coordX++;
-        } else if (userInput == game_keys[4].key) {
-            char userInputChar = 0x00;
-            printf("Are you sure you want to quit ? (o/N) : ");
-            fflush(stdin);
-            scanf("%c", &userInputChar);
-            if(userInputChar == 'o') {
-                QuitProgram();
+            if (userInput == 224) {
+                userInput = getch();
             }
-            continue;
-        } else if (userInput == '/') {
-            system("cls");
-            char userCommand[32] = {0};
-            printf("/");
-            fflush(stdin);
-            scanf("%31s", userCommand);
-            bool commandFound = false;
-            for (int i = 0; commands[i].name != NULL; i++) {
-                if (strcmp(userCommand, commands[i].name) == 0) {
-                    commands[i].function();
-                    commandFound = true;
-                    break;
+            if (userInput == game_keys[0].key) {
+                if (snake_mod) {
+                    directionX = 0;
+                    directionY = -1;
+                } else {
+                    coordY--;
+                }
+                snakeHead = '^';
+            } else if (userInput == game_keys[1].key) {
+                if (snake_mod) {
+                    directionX = 0;
+                    directionY = 1;
+                } else {
+                    coordY++;
+                }
+                snakeHead = 'v';
+            } else if (userInput == game_keys[2].key) {
+                if (snake_mod) {
+                    directionX = -1;
+                    directionY = 0;
+                } else {
+                    coordX--;
+                }
+                snakeHead = '<';
+            } else if (userInput == game_keys[3].key) {
+                if (snake_mod) {
+                    directionX = 1;
+                    directionY = 0;
+                } else {
+                    coordX++;
+                }
+                snakeHead = '>';
+            } else if (userInput == game_keys[4].key) {
+                char userInputChar = 0x00;
+                printf("Are you sure you want to quit ? (o/N) : ");
+                fflush(stdin);
+                scanf("%c", &userInputChar);
+                if(userInputChar == 'o') {
+                    QuitProgram();
+                }
+                continue;
+            } else if (userInput == game_keys[5].key) {
+                printf("Game paused, press %c again to unpause...", game_keys[5].key);
+                while (true) {
+                    userInput = getch();
+                    if (userInput == game_keys[5].key) {
+                        break;
+                    }
+                }
+            } else if (userInput == '/') {
+                system("cls");
+                char userCommand[32] = {0};
+                printf("/");
+                fflush(stdin);
+                scanf("%31s", userCommand);
+                bool commandFound = false;
+                for (int i = 0; commands[i].name != NULL; i++) {
+                    if (strcmp(userCommand, commands[i].name) == 0) {
+                        commands[i].function();
+                        commandFound = true;
+                        break;
+                    }
+                }
+                if (!commandFound) {
+                    printf("command %s not recognised\n", userCommand);
+                }
+                printf("\nPress any key to continue");
+                getch();
+                continue;
+            }
+            if (!snake_mod) {
+                if (coordY <= 0) {
+                    coordY = game_board_size - 2;
+                } else if (coordY >= game_board_size - 1) {
+                    coordY = 1;
+                } else if (coordX <= 0) {
+                    coordX = game_board_size - 2;
+                } else if (coordX >= game_board_size - 1) {
+                    coordX = 1;
                 }
             }
-            if (!commandFound) {
-                printf("command %s not recognised\n", userCommand);
-            }
-            printf("\nPress any key to continue");
-            getch();
-            continue;
         }
         if (snake_mod) {
-            if (coordX == foodX && coordY == foodY) {
-                snakeLength++;
-                generate_food();
-            }
-
-            for (int i = 0; i < snakeLength - 1; i++)
-            {
-                if (coordX == snake[i].x && coordY == snake[i].y) {
-                    game_over();
-                }
-            }
-
-            update_snake();
-            
-            if (coordY <= 0 || coordY >= game_board_size - 1 || coordX <= 0 || coordX >= game_board_size - 1) {
-                game_over();
-            }
-        } else {
-            if (coordY <= 0) {
-                coordY = game_board_size - 2;
-            } else if (coordY >= game_board_size - 1) {
-                coordY = 1;
-            } else if (coordX <= 0) {
-                coordX = game_board_size - 2;
-            } else if (coordX >= game_board_size - 1) {
-                coordX = 1;
-            }
+            checkCollisions();
+            Sleep(200);
         }
-        
     }
 }
