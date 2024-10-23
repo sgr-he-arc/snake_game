@@ -91,6 +91,12 @@ void config(void) {
 
 void snake_mod_command(void) {
     snake_mod = true;
+    coordX = (int)(game_board_size / 2);
+    coordY = (int)(game_board_size / 2);
+    snakeLength = 1;
+    snakeHead = '>';
+    directionX = 1;
+    directionY = 0;
     generate_food();
     printf("Successfully transformed program in snake game\n");
 }
@@ -342,8 +348,8 @@ int main(void) {
             }
         }
         if (snake_mod) {
-            checkCollisions();
             Sleep(200);
+            checkCollisions();
         }
     }
 }
