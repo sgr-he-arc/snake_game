@@ -1,16 +1,16 @@
 {
 	"controls":	[{
 			"label":	"Move Up",
-			"key":	"w"
+			"key":	"ArrowUp"
 		}, {
 			"label":	"Move Down",
-			"key":	"s"
+			"key":	"ArrowDown"
 		}, {
 			"label":	"Move Left",
-			"key":	"a"
+			"key":	"ArrowLeft"
 		}, {
 			"label":	"Move Right",
-			"key":	"d"
+			"key":	"ArrowRight"
 		}, {
 			"label":	"Quit",
 			"key":	"q"

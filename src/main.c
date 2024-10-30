@@ -265,7 +265,7 @@ int main(void) {
             if (userInput == 224) {
                 userInput = getch();
             }
-            if (userInput == game_keys[0].key) {
+            if (userInput == game_keys[0].key) { //Go up
                 if (snake_mod) {
                     directionX = 0;
                     directionY = -1;
@@ -273,7 +273,7 @@ int main(void) {
                     coordY--;
                 }
                 snakeHead = '^';
-            } else if (userInput == game_keys[1].key) {
+            } else if (userInput == game_keys[1].key) { //Go down
                 if (snake_mod) {
                     directionX = 0;
                     directionY = 1;
@@ -281,7 +281,7 @@ int main(void) {
                     coordY++;
                 }
                 snakeHead = 'v';
-            } else if (userInput == game_keys[2].key) {
+            } else if (userInput == game_keys[2].key) { //Go left
                 if (snake_mod) {
                     directionX = -1;
                     directionY = 0;
@@ -289,7 +289,7 @@ int main(void) {
                     coordX--;
                 }
                 snakeHead = '<';
-            } else if (userInput == game_keys[3].key) {
+            } else if (userInput == game_keys[3].key) { //Go right
                 if (snake_mod) {
                     directionX = 1;
                     directionY = 0;
@@ -297,7 +297,7 @@ int main(void) {
                     coordX++;
                 }
                 snakeHead = '>';
-            } else if (userInput == game_keys[4].key) {
+            } else if (userInput == game_keys[4].key) { //quit
                 char userInputChar = 0x00;
                 printf("Are you sure you want to quit ? (o/N) : ");
                 fflush(stdin);
@@ -306,7 +306,7 @@ int main(void) {
                     QuitProgram();
                 }
                 continue;
-            } else if (userInput == game_keys[5].key) {
+            } else if (userInput == game_keys[5].key) { //pause (Jojo)
                 printf("Game paused, press %c again to unpause...", game_keys[5].key);
                 while (true) {
                     userInput = getch();
@@ -314,7 +314,7 @@ int main(void) {
                         break;
                     }
                 }
-            } else if (userInput == '/') {
+            } else if (userInput == '/') { //command handle
                 system("cls");
                 char userCommand[32] = {0};
                 printf("/");
@@ -353,3 +353,7 @@ int main(void) {
         }
     }
 }
+//TODO: add async inputs to allow easier turns
+//TODO: add graphic view for main game
+//TODO: add unicode to the program
+//TODO: test program for eventual bugs
